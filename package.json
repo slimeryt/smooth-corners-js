@@ -1,0 +1,21 @@
+{
+  "name": "smooth-corners-js",
+  "version": "0.1.1",
+  "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
+  "keywords": ["smooth corners", "squircle", "continuous corners", "border-radius", "corner smoothing", "figma", "ios"],
+  "license": "MIT",
+  "author": "slimeryt",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build"
+  },
+  "devDependencies": { "typescript": "^5.9.2" }
+}
