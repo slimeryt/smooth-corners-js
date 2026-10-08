@@ -3,65 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>smooth-corners-js</title>
 <meta name="description" content="Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.">
 <style>
-:root{--bg:#ffffff;--soft:#f4f5f8;--text:#14161a;--muted:#5d6572;--line:#e3e6ec;--accent:#0a6cff;--code:#f4f5f8;--card:#ffffff}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1013;--soft:#171a20;--text:#f2f4f7;--muted:#9aa3b2;--line:#262b34;--accent:#5aa2ff;--code:#171a20;--card:#171a20}}
+:root{color-scheme:light dark;--bg:#ffffff;--soft:#f4f5f8;--text:#14161a;--muted:#5d6572;--line:#e3e6ec;--accent:#0a6cff;--code:#f6f7fa;--card:#ffffff;--shadow:0 18px 50px rgba(20,28,45,.14);--k:#a626a4;--s:#2e7d32;--n:#b45309;--f:#0a6cff;--t:#b3261e;--a:#8a5a00;--c:#6b7280}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1013;--soft:#171a20;--text:#f2f4f7;--muted:#9aa3b2;--line:#262b34;--accent:#5aa2ff;--code:#12151a;--card:#14171d;--shadow:0 18px 50px rgba(0,0,0,.55);--k:#d291e4;--s:#8fd694;--n:#f0b36a;--f:#7db6ff;--t:#ff8f86;--a:#e6c07b;--c:#8b93a1}}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-.layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1120px;margin:0 auto}
-nav.side{position:sticky;top:0;align-self:start;height:100vh;padding:32px 20px;overflow:auto;border-right:1px solid var(--line)}
-nav.side b{display:block;margin-bottom:18px;font-size:17px}
-nav.side a{display:block;padding:6px 10px;margin:2px 0;border-radius:10px;color:var(--muted);font-size:14px}
-nav.side a:hover{background:var(--soft);color:var(--text);text-decoration:none}
-nav.side .links{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
-main{padding:56px 40px 96px;min-width:0}
-h1{margin:0 0 12px;font-size:44px;line-height:1.1;letter-spacing:-.03em}
-h2{margin:64px 0 12px;font-size:26px;letter-spacing:-.02em;scroll-margin-top:24px}
+svg.i{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav.side{position:fixed;top:16px;left:16px;bottom:16px;width:236px;display:flex;flex-direction:column;padding:18px 12px;overflow:auto;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);z-index:5}
+nav.side .brand{display:flex;align-items:center;gap:10px;margin:2px 8px 18px;font-weight:700;font-size:16px}
+nav.side .brand span{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--accent);color:#fff}
+nav.side a.item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:2px 0;border-radius:12px;color:var(--muted);font-size:14.5px;font-weight:500}
+nav.side a.item:hover{background:var(--soft);color:var(--text);text-decoration:none}
+nav.side a.item.on{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+nav.side .grow{flex:1}
+nav.side .links{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+main{margin-left:288px;max-width:880px;padding:56px 40px 96px}
+.pill{display:inline-block;padding:3px 10px;margin-right:6px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:13px;font-weight:600}
+h1{margin:14px 0 12px;font-size:46px;line-height:1.08;letter-spacing:-.03em}
+h2{display:flex;align-items:center;gap:12px;margin:68px 0 14px;font-size:26px;letter-spacing:-.02em;scroll-margin-top:24px}
+h2 .ic{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
 h3{margin:28px 0 8px;font-size:17px}
-p{margin:0 0 14px}.lead{font-size:19px;color:var(--muted);max-width:620px}
+p{margin:0 0 14px}.lead{font-size:19px;color:var(--muted);max-width:640px}
 code{padding:2px 6px;border-radius:7px;background:var(--code);font:13.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-pre{margin:14px 0 20px;padding:16px 18px;overflow:auto;border-radius:16px;background:var(--code);border:1px solid var(--line)}
-pre code{padding:0;background:none;font-size:13.5px;line-height:1.55}
+.code{position:relative;margin:14px 0 20px}
+.code pre{margin:0;padding:18px 20px;overflow:auto;border-radius:18px;background:var(--code);border:1px solid var(--line)}
+.code pre code{padding:0;background:none;font-size:13.5px;line-height:1.6}
+.copy{position:absolute;top:10px;right:10px;display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--muted);cursor:pointer;opacity:0;transition:opacity .15s}
+.code:hover .copy,.copy:focus-visible{opacity:1}
+.copy:hover{color:var(--text)}.copy.done{color:#2e9e57;opacity:1}
+.tk{color:var(--k)}.ts{color:var(--s)}.tn{color:var(--n)}.tf{color:var(--f)}.tt{color:var(--t)}.ta{color:var(--a)}.tc{color:var(--c)}
 table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:14.5px}
 th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
 th{color:var(--muted);font-weight:600;font-size:13px}
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0}
-.tile{padding:22px;border-radius:28px;background:var(--soft);color:var(--text);min-height:150px}
-.tile.circular{border-radius:28px}
-.tile small{display:block;margin-top:6px;color:var(--muted)}
-.tile b{font-size:15px}
-.play{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:center;padding:24px;border:1px solid var(--line);border-radius:24px;background:var(--card)}
-.stage{display:grid;place-items:center;min-height:260px;border-radius:18px;background:var(--soft)}
+.tile{padding:22px;border-radius:28px;background:var(--soft);min-height:150px}
+.tile b{font-size:15px}.tile small{display:block;margin-top:6px;color:var(--muted)}
+.play{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:center;padding:24px;border:1px solid var(--line);border-radius:26px;background:var(--card)}
+.stage{display:grid;place-items:center;min-height:260px;border-radius:20px;background:var(--soft)}
 .stage svg{width:min(100%,300px);height:auto;overflow:visible}
 .stage path{fill:var(--accent)}
-.controls label{display:block;margin-bottom:16px;font-size:14px;font-weight:600}
+.controls label{display:block;margin-bottom:18px;font-size:14px;font-weight:600}
 .controls output{float:right;color:var(--muted);font-weight:500}
-.controls input[type=range]{width:100%;margin-top:6px;accent-color:var(--accent)}
-.pathbox{margin-top:12px;max-height:84px;overflow:auto;padding:10px 12px;border-radius:12px;background:var(--code);font:11.5px ui-monospace,Menlo,Consolas,monospace;color:var(--muted);word-break:break-all}
-.note{padding:14px 16px;border-radius:14px;background:var(--soft);color:var(--muted);font-size:14.5px}
-.pill{display:inline-block;padding:3px 10px;margin-right:6px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:13px;font-weight:600}
+input[type=range]{--fill:50%;display:block;width:100%;height:28px;margin:6px 0 0;padding:0;background:transparent;cursor:pointer;-webkit-appearance:none;appearance:none}
+input[type=range]:focus{outline:none}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) var(--fill),var(--line) var(--fill))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 30%,transparent)}
+.note{display:flex;gap:12px;padding:16px 18px;border-radius:18px;background:var(--soft);color:var(--muted);font-size:14.5px}
+.note svg{margin-top:3px;color:var(--n)}
 footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-@media(max-width:860px){.layout{grid-template-columns:1fr}nav.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:18px 20px}nav.side a{display:inline-block}.compare,.play{grid-template-columns:1fr}main{padding:32px 20px 72px}h1{font-size:34px}}
+@media(max-width:900px){nav.side{position:static;margin:12px;width:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px;padding:12px;border-radius:20px;box-shadow:none}nav.side .brand{margin:0 8px 0 4px}nav.side .grow,nav.side .links{display:none}main{margin-left:0;padding:24px 20px 72px}.compare,.play{grid-template-columns:1fr}h1{font-size:34px}}
 </style>
 </head>
 <body>
-<div class="layout">
-<nav class="side">
-  <b>smooth-corners-js</b>
-  <a href="#install">Install</a>
-  <a href="#quick-start">Quick start</a>
-  <a href="#auto">Smooth everything</a>
-  <a href="#single">One element</a>
-  <a href="#paths">Path helpers</a>
-  <a href="#playground">Playground</a>
-  <a href="#limits">Limits</a>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol><symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /> <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /> <path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /> <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol><symbol id="i-square" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></symbol><symbol id="i-spline" viewBox="0 0 24 24"><circle cx="19" cy="5" r="2" /> <circle cx="5" cy="19" r="2" /> <path d="M5 17A12 12 0 0 1 17 5" /></symbol><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3" /> <path d="M12 19H3" /> <path d="M14 3v4" /> <path d="M16 17v4" /> <path d="M21 12h-9" /> <path d="M21 19h-5" /> <path d="M21 5h-7" /> <path d="M8 10v4" /> <path d="M8 12H3" /></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></symbol><symbol id="i-branch" viewBox="0 0 24 24"><path d="M15 6a9 9 0 0 0-9 9V3" /> <circle cx="18" cy="6" r="3" /> <circle cx="6" cy="18" r="3" /></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol></svg>
+<nav class="side" aria-label="Documentation">
+  <div class="brand"><span><svg class="i"><use href="#i-sparkles"/></svg></span>smooth-corners-js</div>
+  <a class="item" href="#install"><svg class="i"><use href="#i-download"/></svg>Install</a>
+  <a class="item" href="#quick-start"><svg class="i"><use href="#i-rocket"/></svg>Quick start</a>
+  <a class="item" href="#auto"><svg class="i"><use href="#i-sparkles"/></svg>Smooth everything</a>
+  <a class="item" href="#single"><svg class="i"><use href="#i-square"/></svg>One element</a>
+  <a class="item" href="#paths"><svg class="i"><use href="#i-spline"/></svg>Path helpers</a>
+  <a class="item" href="#playground"><svg class="i"><use href="#i-sliders"/></svg>Playground</a>
+  <a class="item" href="#limits"><svg class="i"><use href="#i-alert"/></svg>Limits</a>
+  <div class="grow"></div>
   <div class="links">
-    <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a>
-    <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a>
+    <a class="item" href="https://www.npmjs.com/package/smooth-corners-js"><svg class="i"><use href="#i-package"/></svg>npm</a>
+    <a class="item" href="https://github.com/slimeryt/smooth-corners-js"><svg class="i"><use href="#i-branch"/></svg>GitHub</a>
   </div>
 </nav>
 <main>
@@ -70,25 +86,25 @@ footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);color:v
   <p class="lead">A normal <code>border-radius</code> corner stops at a point where the curve suddenly starts. A smooth corner eases into the curve, the same shape Figma and iOS use. This library gives you that with one call.</p>
 
   <div class="compare">
-    <div class="tile circular" data-no-smooth><b>border-radius</b><small>The curve starts abruptly at a point.</small></div>
+    <div class="tile" data-no-smooth style="border-radius:28px"><b>border-radius</b><small>The curve starts abruptly at a point.</small></div>
     <div class="tile"><b>smooth-corners-js</b><small>The curve eases in and out.</small></div>
   </div>
 
-  <h2 id="install">Install</h2>
-  <pre><code>npm install smooth-corners-js</code></pre>
+  <h2 id="install"><span class="ic"><svg class="i"><use href="#i-download"/></svg></span>Install</h2>
+  <div class="code"><pre><code class="language-bash">npm install smooth-corners-js</code></pre></div>
   <p>Or load it straight from a CDN in a plain page:</p>
-  <pre><code>&lt;script type="module"&gt;
+  <div class="code"><pre><code class="language-html">&lt;script type="module"&gt;
   import { enableAutoSmoothCorners } from 'https://esm.sh/smooth-corners-js';
   enableAutoSmoothCorners();
-&lt;/script&gt;</code></pre>
+&lt;/script&gt;</code></pre></div>
 
-  <h2 id="quick-start">Quick start</h2>
-  <pre><code>import { enableAutoSmoothCorners } from 'smooth-corners-js';
+  <h2 id="quick-start"><span class="ic"><svg class="i"><use href="#i-rocket"/></svg></span>Quick start</h2>
+  <div class="code"><pre><code class="language-js">import { enableAutoSmoothCorners } from 'smooth-corners-js';
 
-enableAutoSmoothCorners({ smoothing: 0.6 });</code></pre>
+enableAutoSmoothCorners({ smoothing: 0.6 });</code></pre></div>
   <p>That is all. Every element with a CSS <code>border-radius</code> now has smooth corners, including elements added later. Your stylesheet is unchanged.</p>
 
-  <h2 id="auto">Smooth everything</h2>
+  <h2 id="auto"><span class="ic"><svg class="i"><use href="#i-sparkles"/></svg></span>Smooth everything</h2>
   <h3><code>enableAutoSmoothCorners(options?)</code></h3>
   <p>Watches the page and smooths each rounded element. Returns a function that stops it and restores every element.</p>
   <table>
@@ -96,60 +112,135 @@ enableAutoSmoothCorners({ smoothing: 0.6 });</code></pre>
     <tr><td><code>smoothing</code></td><td><code>0.6</code></td><td><code>0</code> is a normal circular corner. <code>1</code> is the broadest curve.</td></tr>
     <tr><td><code>minRadius</code></td><td><code>6</code></td><td>Elements with a smaller radius are left alone.</td></tr>
   </table>
-  <pre><code>const stop = enableAutoSmoothCorners({ smoothing: 0.7, minRadius: 8 });
-stop();</code></pre>
+  <div class="code"><pre><code class="language-js">const stop = enableAutoSmoothCorners({ smoothing: 0.7, minRadius: 8 });
+
+stop();</code></pre></div>
   <p>Add <code>data-no-smooth</code> to an element to skip it and everything inside it.</p>
   <h3>What it does to an element</h3>
   <p>Backgrounds, borders, ring shadows and soft shadows are redrawn to follow the curve. It re-checks on hover, focus, theme changes and resize.</p>
 
-  <h2 id="single">Smooth one element</h2>
+  <h2 id="single"><span class="ic"><svg class="i"><use href="#i-square"/></svg></span>Smooth one element</h2>
   <h3><code>applySmoothCorners(element, { radius, smoothing? })</code></h3>
-  <pre><code>import { applySmoothCorners } from 'smooth-corners-js';
+  <div class="code"><pre><code class="language-js">import { applySmoothCorners } from 'smooth-corners-js';
 
 const stop = applySmoothCorners(document.querySelector('.card'), {
   radius: 24,
   smoothing: 0.6,
-});</code></pre>
+});</code></pre></div>
   <p>This clips the element to the shape and follows its size. It also clips shadows and anything that overflows, so use it for simple elements. Call the returned function to undo it.</p>
 
-  <h2 id="paths">Path helpers</h2>
+  <h2 id="paths"><span class="ic"><svg class="i"><use href="#i-spline"/></svg></span>Path helpers</h2>
   <p>Get the shape as an SVG path string and use it anywhere: an SVG <code>&lt;path&gt;</code>, a CSS <code>clip-path: path("…")</code>, or a canvas <code>Path2D</code>.</p>
   <h3><code>createSmoothCornerPath(width, height, { radius, smoothing? })</code></h3>
-  <pre><code>const d = createSmoothCornerPath(320, 200, { radius: 24, smoothing: 0.6 });
-element.style.clipPath = `path("${d}")`;</code></pre>
+  <div class="code"><pre><code class="language-js">const d = createSmoothCornerPath(320, 200, { radius: 24, smoothing: 0.6 });
+element.style.clipPath = `path("${d}")`;</code></pre></div>
   <h3><code>createSmoothRectPath(width, height, radii, smoothing?, originX?, originY?)</code></h3>
   <p>The same, with a separate radius for each corner.</p>
-  <pre><code>const d = createSmoothRectPath(320, 200, { tl: 32, tr: 32, br: 0, bl: 0 }, 0.6);</code></pre>
+  <div class="code"><pre><code class="language-js">const d = createSmoothRectPath(320, 200, { tl: 32, tr: 32, br: 0, bl: 0 }, 0.6);</code></pre></div>
 
-  <h2 id="playground">Playground</h2>
+  <h2 id="playground"><span class="ic"><svg class="i"><use href="#i-sliders"/></svg></span>Playground</h2>
   <div class="play">
     <div class="stage"><svg id="shape" viewBox="0 0 300 200" aria-label="Preview of the corner shape"><path id="shape-path" d=""></path></svg></div>
     <div class="controls">
       <label>Radius <output id="r-out">40</output><input id="r" type="range" min="0" max="100" value="40"></label>
-      <label>Smoothing <output id="s-out">0.6</output><input id="s" type="range" min="0" max="1" step="0.05" value="0.6"></label>
-      <div class="pathbox" id="d-out"></div>
+      <label>Smoothing <output id="s-out">0.60</output><input id="s" type="range" min="0" max="1" step="0.05" value="0.6"></label>
     </div>
   </div>
 
-  <h2 id="limits">Limits</h2>
-  <p class="note">The auto mode leaves an element with its normal rounded corners when it cannot smooth it safely: circles and pills, percentage radii, dashed or mixed-colour borders, borders over a background image, inset shadows, and elements with a child sitting in a corner. Pages with a strict Content-Security-Policy may block the inline SVG images it paints, so allow <code>img-src data:</code>. A smoothed corner looks a little rounder than the same radius, so you may want a slightly smaller one. It runs in the browser only.</p>
+  <h2 id="limits"><span class="ic"><svg class="i"><use href="#i-alert"/></svg></span>Limits</h2>
+  <div class="note"><svg class="i"><use href="#i-alert"/></svg><div>The auto mode leaves an element with its normal rounded corners when it cannot smooth it safely: circles and pills, percentage radii, dashed or mixed-colour borders, borders over a background image, inset shadows, and elements with a child sitting in a corner. Pages with a strict Content-Security-Policy may block the inline SVG images it paints, so allow <code>img-src data:</code>. A smoothed corner looks a little rounder than the same radius, so you may want a slightly smaller one. It runs in the browser only.</div></div>
 
-  <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a></footer>
+  <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a> · Icons by <a href="https://lucide.dev">Lucide</a></footer>
 </main>
-</div>
 <script type="module">
 import { createSmoothCornerPath, enableAutoSmoothCorners } from './smooth-corners.js';
-enableAutoSmoothCorners({ smoothing: 0.6 });
 
-const r = document.getElementById('r'), s = document.getElementById('s');
+const KEYWORDS = /^(import|from|export|const|let|var|function|return|new|if|else|await|async|type|true|false|null|undefined)$/;
+const PATTERNS = {
+  js: /(?<str>'[^']*'|"[^"]*"|`[^`]*`)|(?<num>\b\d+(?:\.\d+)?\b)|(?<word>[A-Za-z_$][\w$]*)(?<call>(?=\())?|(?<punct>[{}()[\];,.:=<>!+\-*/?|&]+)|(?<ws>\s+)|(?<other>.)/gs,
+  html: /(?<tag><\/?[A-Za-z][\w-]*|\/?>)|(?<attr>[A-Za-z-]+(?==))|(?<str>"[^"]*"|'[^']*')|(?<word>[A-Za-z_$][\w$]*)|(?<punct>[{}()[\];,.:=!+\-*/?|&]+)|(?<num>\b\d+(?:\.\d+)?\b)|(?<ws>\s+)|(?<other>.)/gs,
+  bash: /(?<flag>--?[\w-]+)|(?<str>'[^']*'|"[^"]*")|(?<word>[\w@./:-]+)|(?<ws>\s+)|(?<other>.)/gs
+};
+const esc = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function highlightJs(text, lang) {
+  let out = '';
+  let first = true;
+  for (const m of text.matchAll(PATTERNS[lang])) {
+    const g = m.groups;
+    const piece = esc(m[0]);
+    if (lang === 'bash') {
+      if (g.flag) out += `<span class="tn">${piece}</span>`;
+      else if (g.str) out += `<span class="ts">${piece}</span>`;
+      else if (g.word) { out += first ? `<span class="tf">${piece}</span>` : piece; first = false; }
+      else out += piece;
+      continue;
+    }
+    if (g.str) {
+      out += `<span class="ts">${piece}</span>`;
+    } else if (g.tag) {
+      out += `<span class="tt">${piece}</span>`;
+    } else if (g.attr) {
+      out += `<span class="ta">${piece}</span>`;
+    } else if (g.num) {
+      out += `<span class="tn">${piece}</span>`;
+    } else if (g.word) {
+      if (KEYWORDS.test(g.word)) out += `<span class="tk">${piece}</span>`;
+      else if (g.call !== undefined) out += `<span class="tf">${piece}</span>`;
+      else out += piece;
+    } else out += piece;
+  }
+  return out;
+}
+
+for (const block of document.querySelectorAll('.code code')) {
+  const lang = (block.className.match(/language-(\w+)/) || [])[1];
+  if (lang && PATTERNS[lang]) block.innerHTML = highlightJs(block.textContent, lang);
+}
+
+for (const wrap of document.querySelectorAll('.code')) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'copy';
+  button.setAttribute('aria-label', 'Copy code');
+  button.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>';
+  button.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(wrap.querySelector('code').textContent); } catch { return; }
+    button.classList.add('done');
+    button.innerHTML = '<svg class="i"><use href="#i-check"/></svg>';
+    setTimeout(() => { button.classList.remove('done'); button.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>'; }, 1600);
+  });
+  wrap.appendChild(button);
+}
+
+const links = [...document.querySelectorAll('nav.side a.item[href^="#"]')];
+const sections = links.map((link) => document.querySelector(link.getAttribute('href')));
+const updateSpy = () => {
+  const line = window.scrollY + window.innerHeight * 0.3;
+  let current = null;
+  for (const section of sections) if (section && section.offsetTop <= line) current = section;
+  if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) current = sections[sections.length - 1];
+  for (const link of links) link.classList.toggle('on', !!current && link.getAttribute('href') === '#' + current.id);
+};
+window.addEventListener('scroll', updateSpy, { passive: true });
+window.addEventListener('resize', updateSpy);
+updateSpy();
+
+const r = document.getElementById('r');
+const s = document.getElementById('s');
+const fill = (input) => input.style.setProperty('--fill', ((input.value - input.min) / (input.max - input.min)) * 100 + '%');
 const draw = () => {
-  const d = createSmoothCornerPath(300, 200, { radius: Number(r.value), smoothing: Number(s.value) });
-  document.getElementById('shape-path').setAttribute('d', d);
-  document.getElementById('d-out').textContent = d;
+  document.getElementById('shape-path').setAttribute('d', createSmoothCornerPath(300, 200, { radius: Number(r.value), smoothing: Number(s.value) }));
   document.getElementById('r-out').textContent = r.value;
   document.getElementById('s-out').textContent = Number(s.value).toFixed(2);
+  fill(r);
+  fill(s);
 };
-r.addEventListener('input', draw); s.addEventListener('input', draw); draw();
+r.addEventListener('input', draw);
+s.addEventListener('input', draw);
+draw();
+
+enableAutoSmoothCorners({ smoothing: 0.6 });
 </script>
 </body>
 </html>
