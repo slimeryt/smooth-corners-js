@@ -1,9 +1,12 @@
 {
   "name": "smooth-corners-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
   "keywords": ["smooth corners", "squircle", "continuous corners", "border-radius", "corner smoothing", "figma", "ios"],
   "license": "MIT",
+  "homepage": "https://slimeryt.github.io/smooth-corners-js/",
+  "repository": { "type": "git", "url": "git+https://github.com/slimeryt/smooth-corners-js.git" },
+  "bugs": { "url": "https://github.com/slimeryt/smooth-corners-js/issues" },
   "author": "slimeryt",
   "type": "module",
   "sideEffects": false,

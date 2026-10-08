@@ -14,7 +14,6 @@ npm install smooth-corners-js
 import { enableAutoSmoothCorners } from 'smooth-corners-js';
 
 const stop = enableAutoSmoothCorners({ smoothing: 0.6 });
-// stop() restores everything
 ```
 
 Call it once after the page has loaded. Every element with a `border-radius` gets smooth corners, including elements added later, and it re-checks on hover, focus and theme changes. Your CSS stays as it is.
@@ -44,7 +43,6 @@ This clips the element to the shape and follows its size. It also clips shadows 
 import { createSmoothCornerPath, createSmoothRectPath } from 'smooth-corners-js';
 
 const d = createSmoothCornerPath(320, 200, { radius: 24, smoothing: 0.6 });
-// use d in an SVG <path>, a CSS clip-path: path("..."), a canvas Path2D, ...
 
 const mixed = createSmoothRectPath(320, 200, { tl: 32, tr: 32, br: 0, bl: 0 }, 0.6);
 ```

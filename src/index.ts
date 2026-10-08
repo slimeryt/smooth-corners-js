@@ -1,4 +1,3 @@
-/** Continuous-curvature (smooth) corners for the web. */
 export type SmoothCornerOptions = { radius: number; smoothing?: number };
 export type CornerRadii = { tl: number; tr: number; br: number; bl: number };
 const number = (value: number) => Number(value.toFixed(3));
@@ -6,11 +5,6 @@ const radians = (degrees: number) => (degrees * Math.PI) / 180;
 
 type CornerParams = { a: number; b: number; c: number; d: number; p: number; arc: number; r: number };
 
-/**
- * Geometry for one continuous-curvature corner (the construction behind Figma / iOS "corner smoothing").
- * The curve leaves the straight edge gradually, over p = (1 + smoothing) * radius, through a Bezier ramp,
- * a shortened circular arc, and a mirrored ramp - so curvature never jumps at the point where the edge ends.
- */
 function cornerParams(radius: number, smoothing: number, budget: number): CornerParams {
   const r = Math.min(radius, budget);
   if (r <= 0) return { a: 0, b: 0, c: 0, d: 0, p: 0, arc: 0, r: 0 };
@@ -25,14 +19,13 @@ function cornerParams(radius: number, smoothing: number, budget: number): Corner
   return { a: 2 * b, b, c, d, p, arc, r };
 }
 
-/** SVG path of a rectangle with continuous corners; each corner has its own radius. 0 = circular, 1 = broadest. */
 export function createSmoothRectPath(width: number, height: number, radii: CornerRadii, smoothing = 0.6, originX = 0, originY = 0) {
   if (width <= 0 || height <= 0) return '';
   const s = Math.max(0, Math.min(smoothing, 1));
   const budget = Math.min(width, height) / 2;
   const tl = cornerParams(radii.tl, s, budget), tr = cornerParams(radii.tr, s, budget), br = cornerParams(radii.br, s, budget), bl = cornerParams(radii.bl, s, budget);
   const n = number;
-  // Only the absolute commands (M, L) carry the origin, so the shape can be placed anywhere, e.g. in a child's coordinates.
+
   const parts = [`M${n(originX + width - tr.p)} ${n(originY)}`];
   if (tr.r) parts.push(`c${n(tr.a)} 0 ${n(tr.a + tr.b)} 0 ${n(tr.a + tr.b + tr.c)} ${n(tr.d)}`, `a${n(tr.r)} ${n(tr.r)} 0 0 1 ${n(tr.arc)} ${n(tr.arc)}`, `c${n(tr.d)} ${n(tr.c)} ${n(tr.d)} ${n(tr.b + tr.c)} ${n(tr.d)} ${n(tr.a + tr.b + tr.c)}`);
   parts.push(`L${n(originX + width)} ${n(originY + height - br.p)}`);
@@ -45,13 +38,11 @@ export function createSmoothRectPath(width: number, height: number, radii: Corne
   return parts.join(' ');
 }
 
-/** Same continuous corner on all four corners of a width x height box. */
 export function createSmoothCornerPath(width: number, height: number, options: SmoothCornerOptions) {
   const radius = Math.max(0, options.radius);
   return createSmoothRectPath(width, height, { tl: radius, tr: radius, br: radius, bl: radius }, options.smoothing ?? 0.6);
 }
 
-/** Applies a responsive native CSS clip-path and returns its cleanup function. */
 export function applySmoothCorners(element: HTMLElement, options: SmoothCornerOptions) {
   const previous = element.style.clipPath;
   const update = () => {
@@ -75,7 +66,6 @@ const COLOR = /rgba?\([^)]*\)|#[0-9a-f]{3,8}\b/i;
 
 type ShadowLayer = { raw: string; color: string; x: number; y: number; blur: number; spread: number; inset: boolean };
 
-/** Splits a computed box-shadow into layers. Returns null when a layer cannot be parsed. */
 function parseShadows(value: string): ShadowLayer[] | null {
   if (value === 'none') return [];
   const raws: string[] = [];
@@ -97,24 +87,8 @@ function parseShadows(value: string): ShadowLayer[] | null {
   return layers;
 }
 
-/** A hard ring with no offset and no blur - what `box-shadow: 0 0 0 Npx color` is used for. */
 const isRing = (layer: ShadowLayer) => layer.blur === 0 && layer.x === 0 && layer.y === 0 && layer.spread > 0;
 
-/**
- * Gives every element with a CSS border-radius continuous "smooth" corners.
- *
- * Most elements keep their stylesheet radius and are simply repainted: the background, border and ring-style
- * shadows (`0 0 0 1px color`) become an SVG of the smooth path used as the background image, and a soft
- * box-shadow becomes a drop-shadow of that shape so it follows the curve. Elements whose own box has to be cut
- * (frosted glass, scrollers, media, gradient backgrounds) are clipped to the same path instead, with everything
- * outside the box left visible; only those get their radius overridden. Children that reach the corners of an
- * overflow-hidden element are clipped to the same shape. Anything it cannot smooth safely (percentage radii,
- * circles and pills, dashed or mixed-color borders, borders over background images, offset or inset soft
- * shadows, children sitting in a corner) keeps its normal rounded corners.
- *
- * While an element is re-evaluated its transitions are switched off, and the properties this takes over are
- * removed from its transition list, so hover animations on radius or color cannot fight the override.
- */
 export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
   const smoothing = options.smoothing ?? 0.6;
   const minRadius = options.minRadius ?? 6;
@@ -145,7 +119,6 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
   };
   const set = (element: HTMLElement, property: Overridden, value: string) => { touched.add(property); element.style.setProperty(property, value, 'important'); };
 
-  /** The element's original transition list minus the properties we now control. */
   const transitionWithout = (list: string) => {
     const skip = new Set(touched);
     const radius = skip.has('border-radius');
@@ -157,8 +130,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
   const resizer = new ResizeObserver(entries => { for (const entry of entries) queue.add(entry.target as HTMLElement); schedule(); });
 
   const process = (element: HTMLElement) => {
-    // Read the untouched transition list first, then freeze transitions so restoring the element's own styles
-    // (which we do before measuring it) cannot start an animation and hand us half-transitioned values.
+
     const original = saved.has(element) ? transitions.get(element) ?? 'all' : getComputedStyle(element).transitionProperty;
     element.style.setProperty('transition', 'none', 'important');
     touched = new Set();
@@ -183,7 +155,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     const [tl, tr, br, bl] = parsed.map(value => parseFloat(value) || 0);
     if (Math.max(tl, tr, br, bl) < minRadius) return false;
     resizer.observe(element);
-    // Use the exact (fractional) size so the shape matches the painted box; fall back to the layout size under transforms.
+
     const bounds = element.getBoundingClientRect();
     const width = Math.abs(bounds.width - element.offsetWidth) < 1.5 ? bounds.width : element.offsetWidth;
     const height = Math.abs(bounds.height - element.offsetHeight) < 1.5 ? bounds.height : element.offsetHeight;
@@ -196,7 +168,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     const widths = [style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth].map(parseFloat);
     const hasBorder = widths.some(value => value > 0);
     if (hasBorder) {
-      // Sides may differ in width (a border on only some sides is fine) but must share one solid color.
+
       const colors = [style.borderTopColor, style.borderRightColor, style.borderBottomColor, style.borderLeftColor];
       const styles = [style.borderTopStyle, style.borderRightStyle, style.borderBottomStyle, style.borderLeftStyle];
       const drawn = widths.map((value, index) => (value > 0 ? index : -1)).filter(index => index >= 0);
@@ -219,8 +191,6 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     if (softs.length > 0 && (media || (hasImage && !glass))) return false;
     if (!(media || hasBorder || hasImage || layers.length > 0 || clips || glass || !transparent)) return false;
 
-    // Children sitting in a corner would have a piece bitten out by the corner gap; anything else that sticks out
-    // is fine because everything outside the box stays visible.
     const cornerReach = 1.8 * Math.max(radii.tl, radii.tr, radii.br, radii.bl);
     for (const child of Array.from(element.children)) {
       const position = getComputedStyle(child).position;
@@ -234,8 +204,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     }
 
     const smooth = createSmoothRectPath(width, height, radii, smoothing);
-    // Paint mode: the element keeps its radius and draws its own shape. Clip mode: the element's own box has to be
-    // cut to the shape (frosted glass, scrollers, media, gradient backgrounds), so its radius is replaced.
+
     const paint = !glass && !hasImage && !media && !scrolls;
     const [top, right, bottom, left] = widths;
     const border = Math.max(top, right, bottom, left);
@@ -246,7 +215,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     if (hasBorder && new Set(widths).size === 1) {
       bands.push(`<path d="${smooth}" fill="none" stroke="${borderColor}" stroke-width="${border * 2}" clip-path="url(#s)"/>`);
     } else if (hasBorder) {
-      // Uneven borders: the band is the smooth outline minus a smaller smooth shape pushed in by each side's width.
+
       const inner = createSmoothRectPath(width - left - right, height - top - bottom, {
         tl: Math.max(0, radii.tl - Math.max(top, left)), tr: Math.max(0, radii.tr - Math.max(top, right)),
         br: Math.max(0, radii.br - Math.max(bottom, right)), bl: Math.max(0, radii.bl - Math.max(bottom, left)),
@@ -270,8 +239,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
       if (layers.length > 0) set(element, 'box-shadow', 'none');
       if (softs.length > 0) set(element, 'filter', softs.map(layer => `drop-shadow(${layer.x}px ${layer.y}px ${layer.blur}px ${layer.color})`).join(' '));
       if (clips) {
-        // The element's own overflow still clips its children to a rounded box; clip the ones that reach the
-        // corners to the smooth shape as well.
+
         const reach = cornerReach;
         const clipped: [HTMLElement, string, string][] = [];
         for (const child of Array.from(element.children)) {
@@ -286,9 +254,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
       }
     } else {
       if (rings.length > 0) set(element, 'box-shadow', softs.map(layer => layer.raw).join(', ') || 'none');
-      // Even-odd: everything outside the box stays visible (shadows, focus rings), the corner gaps between the
-      // box and the smooth curve are hidden, and the smooth shape itself is visible. The box is inflated by a
-      // pixel so anti-aliased edge pixels of the background are hidden too.
+
       const edge = SHADOW_REACH, pad = 1;
       set(element, 'clip-path', `path(evenodd, "M${-edge} ${-edge}H${width + edge}V${height + edge}H${-edge}ZM${-pad} ${-pad}H${width + pad}V${height + pad}H${-pad}Z${smooth}")`);
     }
@@ -300,7 +266,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     const items = [...queue];
     queue.clear();
     for (const element of items) { try { process(element); } catch (error) { console.error('smooth-corners skipped an element', element, error); } }
-    observer.takeRecords(); // discard the mutations caused by our own style writes
+    observer.takeRecords();
   };
   const schedule = () => { if (!frame) frame = requestAnimationFrame(flush); };
   const enqueueTree = (node: Node) => {
@@ -316,13 +282,11 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     }
     schedule();
   });
-  // A theme switch (an attribute on <html>) restyles the whole page, so every element is re-evaluated.
+
   const themeObserver = new MutationObserver(() => { enqueueTree(document.body); schedule(); });
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
   observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-selected', 'aria-expanded', 'aria-pressed', 'disabled', 'open'] });
 
-  // Hover, focus and transitions change backgrounds, borders and shadows (including on elements that were
-  // transparent at rest), so re-evaluate the element under the pointer and its ancestors.
   const interaction = (event: Event) => {
     for (let node = event.target as HTMLElement | null; node && node !== document.body; node = node.parentElement) queue.add(node);
     schedule();
