@@ -23,8 +23,7 @@ nav.side .links{margin-top:14px;padding-top:12px;border-top:1px solid var(--line
 main{margin-left:288px;max-width:880px;padding:56px 40px 96px}
 .pill{display:inline-block;padding:3px 10px;margin-right:6px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:13px;font-weight:600}
 h1{margin:14px 0 12px;font-size:46px;line-height:1.08;letter-spacing:-.03em}
-h2{display:flex;align-items:center;gap:12px;margin:68px 0 14px;font-size:26px;letter-spacing:-.02em;scroll-margin-top:24px}
-h2 .ic{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+h2{margin:68px 0 14px;font-size:26px;letter-spacing:-.02em;scroll-margin-top:24px}
 h3{margin:28px 0 8px;font-size:17px}
 p{margin:0 0 14px}.lead{font-size:19px;color:var(--muted);max-width:640px}
 code{padding:2px 6px;border-radius:7px;background:var(--code);font:13.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -87,7 +86,7 @@ footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);color:v
     <div class="tile"><b>smooth-corners-js</b><small>The curve eases in and out.</small></div>
   </div>
 
-  <h2 id="install"><span class="ic"><svg class="i"><use href="#i-download"/></svg></span>Install</h2>
+  <h2 id="install">Install</h2>
   <div class="code"><pre><code class="language-bash">npm install smooth-corners-js</code></pre></div>
   <p>Or load it straight from a CDN in a plain page:</p>
   <div class="code"><pre><code class="language-html">&lt;script type="module"&gt;
@@ -95,13 +94,13 @@ footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);color:v
   enableAutoSmoothCorners();
 &lt;/script&gt;</code></pre></div>
 
-  <h2 id="quick-start"><span class="ic"><svg class="i"><use href="#i-rocket"/></svg></span>Quick start</h2>
+  <h2 id="quick-start">Quick start</h2>
   <div class="code"><pre><code class="language-js">import { enableAutoSmoothCorners } from 'smooth-corners-js';
 
 enableAutoSmoothCorners({ smoothing: 0.6 });</code></pre></div>
   <p>That is all. Every element with a CSS <code>border-radius</code> now has smooth corners, including elements added later. Your stylesheet is unchanged.</p>
 
-  <h2 id="auto"><span class="ic"><svg class="i"><use href="#i-sparkles"/></svg></span>Smooth everything</h2>
+  <h2 id="auto">Smooth everything</h2>
   <h3><code>enableAutoSmoothCorners(options?)</code></h3>
   <p>Watches the page and smooths each rounded element. Returns a function that stops it and restores every element.</p>
   <table>
@@ -116,7 +115,7 @@ stop();</code></pre></div>
   <h3>What it does to an element</h3>
   <p>Backgrounds, borders, ring shadows and soft shadows are redrawn to follow the curve. It re-checks on hover, focus, theme changes and resize.</p>
 
-  <h2 id="single"><span class="ic"><svg class="i"><use href="#i-square"/></svg></span>Smooth one element</h2>
+  <h2 id="single">Smooth one element</h2>
   <h3><code>applySmoothCorners(element, { radius, smoothing? })</code></h3>
   <div class="code"><pre><code class="language-js">import { applySmoothCorners } from 'smooth-corners-js';
 
@@ -126,7 +125,7 @@ const stop = applySmoothCorners(document.querySelector('.card'), {
 });</code></pre></div>
   <p>This clips the element to the shape and follows its size. It also clips shadows and anything that overflows, so use it for simple elements. Call the returned function to undo it.</p>
 
-  <h2 id="paths"><span class="ic"><svg class="i"><use href="#i-spline"/></svg></span>Path helpers</h2>
+  <h2 id="paths">Path helpers</h2>
   <p>Get the shape as an SVG path string and use it anywhere: an SVG <code>&lt;path&gt;</code>, a CSS <code>clip-path: path("…")</code>, or a canvas <code>Path2D</code>.</p>
   <h3><code>createSmoothCornerPath(width, height, { radius, smoothing? })</code></h3>
   <div class="code"><pre><code class="language-js">const d = createSmoothCornerPath(320, 200, { radius: 24, smoothing: 0.6 });
@@ -135,7 +134,7 @@ element.style.clipPath = `path("${d}")`;</code></pre></div>
   <p>The same, with a separate radius for each corner.</p>
   <div class="code"><pre><code class="language-js">const d = createSmoothRectPath(320, 200, { tl: 32, tr: 32, br: 0, bl: 0 }, 0.6);</code></pre></div>
 
-  <h2 id="playground"><span class="ic"><svg class="i"><use href="#i-sliders"/></svg></span>Playground</h2>
+  <h2 id="playground">Playground</h2>
   <div class="play">
     <div class="stage"><svg id="shape" viewBox="0 0 300 200" aria-label="Preview of the corner shape"><path id="shape-path" d=""></path></svg></div>
     <div class="controls">
@@ -144,7 +143,7 @@ element.style.clipPath = `path("${d}")`;</code></pre></div>
     </div>
   </div>
 
-  <h2 id="limits"><span class="ic"><svg class="i"><use href="#i-alert"/></svg></span>Limits</h2>
+  <h2 id="limits">Limits</h2>
   <div class="note"><svg class="i"><use href="#i-alert"/></svg><div>The auto mode leaves an element with its normal rounded corners when it cannot smooth it safely: circles and pills, percentage radii, dashed or mixed-colour borders, borders over a background image, inset shadows, and elements with a child sitting in a corner. Pages with a strict Content-Security-Policy may block the inline SVG images it paints, so allow <code>img-src data:</code>. A smoothed corner looks a little rounder than the same radius, so you may want a slightly smaller one. It runs in the browser only.</div></div>
 
   <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a> · Icons by <a href="https://lucide.dev">Lucide</a></footer>
