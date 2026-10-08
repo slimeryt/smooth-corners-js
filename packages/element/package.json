@@ -1,34 +1,40 @@
 {
-  "name": "smooth-corners-js",
-  "version": "0.1.2",
-  "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
+  "name": "smooth-corners-element",
+  "version": "0.1.0",
+  "description": "A <smooth-corners> web component with continuous-curvature corners. Works in any framework or none.",
   "keywords": [
+    "web component",
+    "custom element",
     "smooth corners",
     "squircle",
-    "continuous corners",
     "border-radius",
-    "corner smoothing",
-    "figma",
-    "ios"
+    "continuous corners"
   ],
   "license": "MIT",
+  "author": "slimeryt",
   "homepage": "https://slimeryt.github.io/smooth-corners-js/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slimeryt/smooth-corners-js.git"
+    "url": "git+https://github.com/slimeryt/smooth-corners-js.git",
+    "directory": "packages/element"
   },
   "bugs": {
     "url": "https://github.com/slimeryt/smooth-corners-js/issues"
   },
-  "author": "slimeryt",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/define.js"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
     }
   },
   "files": [
@@ -40,10 +46,10 @@
     "build": "tsc -p tsconfig.json",
     "prepack": "npm run build"
   },
+  "dependencies": {
+    "smooth-corners-js": "^0.1.2"
+  },
   "devDependencies": {
     "typescript": "^5.9.2"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

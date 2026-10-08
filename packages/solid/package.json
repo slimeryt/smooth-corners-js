@@ -1,26 +1,26 @@
 {
-  "name": "smooth-corners-js",
-  "version": "0.1.2",
-  "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
+  "name": "smooth-corners-solid",
+  "version": "0.1.0",
+  "description": "Smooth (continuous-curvature) corners for SolidJS. A use: directive and an app-wide helper.",
   "keywords": [
+    "solid",
+    "solidjs",
     "smooth corners",
     "squircle",
-    "continuous corners",
     "border-radius",
-    "corner smoothing",
-    "figma",
-    "ios"
+    "continuous corners"
   ],
   "license": "MIT",
+  "author": "slimeryt",
   "homepage": "https://slimeryt.github.io/smooth-corners-js/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slimeryt/smooth-corners-js.git"
+    "url": "git+https://github.com/slimeryt/smooth-corners-js.git",
+    "directory": "packages/solid"
   },
   "bugs": {
     "url": "https://github.com/slimeryt/smooth-corners-js/issues"
   },
-  "author": "slimeryt",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -40,10 +40,14 @@
     "build": "tsc -p tsconfig.json",
     "prepack": "npm run build"
   },
-  "devDependencies": {
-    "typescript": "^5.9.2"
+  "dependencies": {
+    "smooth-corners-js": "^0.1.2"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "solid-js": "^1.9.0"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.0.0"
+  }
 }

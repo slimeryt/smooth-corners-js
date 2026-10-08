@@ -1,26 +1,26 @@
 {
-  "name": "smooth-corners-js",
-  "version": "0.1.2",
-  "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
+  "name": "smooth-corners-svelte",
+  "version": "0.1.0",
+  "description": "Smooth (continuous-curvature) corners for Svelte. A use: action that works in Svelte 3, 4 and 5.",
   "keywords": [
+    "svelte",
+    "sveltekit",
     "smooth corners",
     "squircle",
-    "continuous corners",
     "border-radius",
-    "corner smoothing",
-    "figma",
-    "ios"
+    "continuous corners"
   ],
   "license": "MIT",
+  "author": "slimeryt",
   "homepage": "https://slimeryt.github.io/smooth-corners-js/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slimeryt/smooth-corners-js.git"
+    "url": "git+https://github.com/slimeryt/smooth-corners-js.git",
+    "directory": "packages/svelte"
   },
   "bugs": {
     "url": "https://github.com/slimeryt/smooth-corners-js/issues"
   },
-  "author": "slimeryt",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -40,10 +40,10 @@
     "build": "tsc -p tsconfig.json",
     "prepack": "npm run build"
   },
+  "dependencies": {
+    "smooth-corners-js": "^0.1.2"
+  },
   "devDependencies": {
     "typescript": "^5.9.2"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

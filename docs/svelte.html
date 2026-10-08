@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Credits · smooth-corners-js</title>
+<title>Svelte · smooth-corners-js</title>
 <meta name="description" content="Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.">
 <style>
 :root{color-scheme:light dark;--bg:#ffffff;--soft:#f4f5f8;--text:#14161a;--muted:#5d6572;--line:#e3e6ec;--accent:#0a6cff;--code:#f6f7fa;--card:#ffffff;--shadow:0 18px 50px rgba(20,28,45,.14);--k:#a626a4;--s:#2e7d32;--n:#b45309;--f:#0a6cff;--t:#b3261e;--a:#8a5a00;--c:#6b7280}
@@ -73,13 +73,13 @@ main>h1:first-child{margin:0 0 28px}.pager{display:flex;gap:16px;margin-top:64px
   <a class="item" href="path-helpers.html"><svg class="i"><use href="#i-spline"/></svg>Path helpers</a>
   <a class="item" href="react.html"><svg class="i"><use href="#i-atom"/></svg>React</a>
   <a class="item" href="vue.html"><svg class="i"><use href="#i-layers"/></svg>Vue</a>
-  <a class="item" href="svelte.html"><svg class="i"><use href="#i-flame"/></svg>Svelte</a>
+  <a class="item on" href="svelte.html"><svg class="i"><use href="#i-flame"/></svg>Svelte</a>
   <a class="item" href="solid.html"><svg class="i"><use href="#i-box"/></svg>Solid</a>
   <a class="item" href="web-component.html"><svg class="i"><use href="#i-component"/></svg>Web component</a>
   <a class="item" href="playground.html"><svg class="i"><use href="#i-sliders"/></svg>Playground</a>
   <a class="item" href="limits.html"><svg class="i"><use href="#i-alert"/></svg>Limits</a>
   <div class="grow"></div>
-  <a class="item on" href="credits.html"><svg class="i"><use href="#i-heart"/></svg>Credits</a>
+  <a class="item" href="credits.html"><svg class="i"><use href="#i-heart"/></svg>Credits</a>
   <a class="item" href="partners.html"><svg class="i"><use href="#i-handshake"/></svg>Partners</a>
   <div class="links">
     <a class="item" href="https://www.npmjs.com/package/smooth-corners-js"><svg class="i"><use href="#i-package"/></svg>npm</a>
@@ -87,15 +87,26 @@ main>h1:first-child{margin:0 0 28px}.pager{display:flex;gap:16px;margin-top:64px
   </div>
 </nav>
 <main>
-<h1>Credits</h1>
-  <p>smooth-corners-js is made and maintained by <a href="https://github.com/slimeryt">slimeryt</a>.</p>
-  <h3>Icons</h3>
-  <p>The icons on this site are from <a href="https://lucide.dev">Lucide</a>, released under the ISC license.</p>
-  <h3>The corner shape</h3>
-  <p>The curve is the continuous-curvature corner used by Figma's corner smoothing and Apple's continuous corners. Figma's write-up, <a href="https://www.figma.com/blog/desperately-seeking-squircles/">Desperately seeking squircles</a>, explains the idea well.</p>
-  <h3>License</h3>
-  <p>The library and these docs are released under the MIT license. See the <a href="https://github.com/slimeryt/smooth-corners-js/blob/main/LICENSE">license file</a>.</p>
-<div class="pager"><a class="prev" href="limits.html"><svg class="i"><use href="#i-left"/></svg><span><small>Previous</small><b>Limits</b></span></a><a class="next" href="partners.html"><span><small>Next</small><b>Partners</b></span><svg class="i"><use href="#i-right"/></svg></a></div>
+<h1>Svelte</h1>
+  <p>The <code>smooth-corners-svelte</code> package is a plain <code>use:</code> action, so it works in Svelte 3, 4 and 5.</p>
+  <div class="code"><pre><code class="language-bash">npm install smooth-corners-svelte</code></pre></div>
+  <h3>Action</h3>
+  <div class="code"><pre><code class="language-html">&lt;script&gt;
+  import { smoothCorners } from 'smooth-corners-svelte';
+&lt;/script&gt;
+
+&lt;div use:smoothCorners={{ radius: 24, smoothing: 0.6 }}&gt;Hello&lt;/div&gt;</code></pre></div>
+  <p>Change the options and the corners update. The action cleans up when the element is removed.</p>
+  <h3>Whole app</h3>
+  <p>In your root layout, smooth every element that has a <code>border-radius</code>:</p>
+  <div class="code"><pre><code class="language-html">&lt;script&gt;
+  import { onMount } from 'svelte';
+  import { enableAutoSmoothCorners } from 'smooth-corners-svelte';
+
+  onMount(() =&gt; enableAutoSmoothCorners({ smoothing: 0.6 }));
+&lt;/script&gt;</code></pre></div>
+
+<div class="pager"><a class="prev" href="vue.html"><svg class="i"><use href="#i-left"/></svg><span><small>Previous</small><b>Vue</b></span></a><a class="next" href="solid.html"><span><small>Next</small><b>Solid</b></span><svg class="i"><use href="#i-right"/></svg></a></div>
 <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a> · Icons by <a href="https://lucide.dev">Lucide</a></footer>
 </main>
 <script type="module">

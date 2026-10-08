@@ -8,6 +8,17 @@ Zero dependencies, about 10 KB, works with any framework or none.
 npm install smooth-corners-js
 ```
 
+## Packages
+
+| Package | For |
+| --- | --- |
+| [`smooth-corners-js`](https://www.npmjs.com/package/smooth-corners-js) | Any website or framework |
+| [`smooth-corners-react`](https://www.npmjs.com/package/smooth-corners-react) | React |
+| [`smooth-corners-vue`](https://www.npmjs.com/package/smooth-corners-vue) | Vue 3 |
+| [`smooth-corners-svelte`](https://www.npmjs.com/package/smooth-corners-svelte) | Svelte |
+| [`smooth-corners-solid`](https://www.npmjs.com/package/smooth-corners-solid) | SolidJS |
+| [`smooth-corners-element`](https://www.npmjs.com/package/smooth-corners-element) | A `<smooth-corners>` web component |
+
 ## Smooth every rounded element
 
 ```ts
