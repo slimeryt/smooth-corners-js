@@ -102,6 +102,8 @@ createApp(App).use(SmoothCornersPlugin).mount('#app');</code></pre></div>
 &lt;/template&gt;</code></pre></div>
   <p>To smooth every element that has a <code>border-radius</code>, pass <code>auto</code>:</p>
   <div class="code"><pre><code class="language-js">app.use(SmoothCornersPlugin, { auto: true, smoothing: 0.6 });</code></pre></div>
+  <h3>Pills</h3>
+  <p>Use <code>pill: true</code> with a large radius: <code>v-smooth-corners="{ radius: 999, smoothing: 0.8, pill: true }"</code>. For the plugin, pass <code>pills: true</code> next to <code>auto</code>.</p>
   <h3>Composable</h3>
   <div class="code"><pre><code class="language-html">&lt;script setup lang="ts"&gt;
 import { ref } from 'vue';

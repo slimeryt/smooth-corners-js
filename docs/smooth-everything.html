@@ -95,11 +95,15 @@ main>h1:first-child{margin:0 0 28px}.pager{display:flex;gap:16px;margin-top:64px
     <tr><th>Option</th><th>Default</th><th>Meaning</th></tr>
     <tr><td><code>smoothing</code></td><td><code>0.6</code></td><td><code>0</code> is a normal circular corner. <code>1</code> is the broadest curve.</td></tr>
     <tr><td><code>minRadius</code></td><td><code>6</code></td><td>Elements with a smaller radius are left alone.</td></tr>
+    <tr><td><code>pills</code></td><td><code>false</code></td><td>Also smooth pill shapes, which have a radius of half their height or more. Circles are never changed.</td></tr>
   </table>
   <div class="code"><pre><code class="language-js">const stop = enableAutoSmoothCorners({ smoothing: 0.7, minRadius: 8 });
 
 stop();</code></pre></div>
   <p>Add <code>data-no-smooth</code> to an element to skip it and everything inside it.</p>
+  <h3>Pills</h3>
+  <p>A normal pill has semicircle ends. A smooth pill keeps its full-height round tip, but the curve leaves the straight edge more gently, so the ends are slightly longer and softer. The effect is subtle at low smoothing and clear from about 0.8.</p>
+  <div class="code"><pre><code class="language-js">enableAutoSmoothCorners({ smoothing: 0.8, pills: true });</code></pre></div>
   <h3>What it does to an element</h3>
   <p>Backgrounds, borders, ring shadows and soft shadows are redrawn to follow the curve. It re-checks on hover, focus, theme changes and resize.</p>
 <div class="pager"><a class="prev" href="quick-start.html"><svg class="i"><use href="#i-left"/></svg><span><small>Previous</small><b>Quick start</b></span></a><a class="next" href="one-element.html"><span><small>Next</small><b>One element</b></span><svg class="i"><use href="#i-right"/></svg></a></div>

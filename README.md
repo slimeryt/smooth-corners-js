@@ -48,6 +48,17 @@ const stop = applySmoothCorners(document.querySelector('.card')!, { radius: 24, 
 
 This clips the element to the shape and follows its size. It also clips shadows and anything that overflows, so use it for simple elements.
 
+## Pills
+
+A normal pill has semicircle ends. A smooth pill keeps its full-height round tip, but the curve leaves the straight edge more gently. Pills are off in auto mode by default, so turn them on:
+
+```ts
+enableAutoSmoothCorners({ smoothing: 0.8, pills: true });
+applySmoothCorners(button, { radius: 999, smoothing: 0.8, pill: true });
+```
+
+Circles are never changed.
+
 ## Get the path yourself
 
 ```ts

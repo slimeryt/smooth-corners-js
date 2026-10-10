@@ -45,6 +45,12 @@ import { AutoSmoothCorners } from 'smooth-corners-react';
 <AutoSmoothCorners smoothing={0.6} />
 ```
 
-It does nothing on the server and starts in the browser after the first render. Everything from smooth-corners-js is re-exported.
+It does nothing on the server and starts in the browser after the first render.
+
+## Pills
+
+Add `pill` with a large radius: `<SmoothCorners radius={999} pill smoothing={0.8}>`. On `AutoSmoothCorners` the option is `pills`.
+
+Everything from smooth-corners-js is re-exported.
 
 MIT

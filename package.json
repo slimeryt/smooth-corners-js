@@ -1,6 +1,6 @@
 {
   "name": "smooth-corners-js",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Continuous-curvature (Figma / iOS style) smooth corners for the web. One call smooths every rounded element on the page.",
   "keywords": [
     "smooth corners",

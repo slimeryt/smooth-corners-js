@@ -98,6 +98,8 @@ main>h1:first-child{margin:0 0 28px}.pager{display:flex;gap:16px;margin-top:64px
 
 &lt;div use:smoothCorners={{ radius: 24, smoothing: 0.6 }}&gt;Hello&lt;/div&gt;</code></pre></div>
   <p>Change the options and the corners update. The action cleans up when the element is removed.</p>
+  <h3>Pills</h3>
+  <p>Use <code>pill: true</code> with a large radius: <code>use:smoothCorners={{ radius: 999, smoothing: 0.8, pill: true }}</code>.</p>
   <h3>Whole app</h3>
   <p>In your root layout, smooth every element that has a <code>border-radius</code>:</p>
   <div class="code"><pre><code class="language-html">&lt;script&gt;

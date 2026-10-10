@@ -1,6 +1,6 @@
 {
   "name": "smooth-corners-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Smooth (continuous-curvature) corners for React. A component, a hook and an app-wide option.",
   "keywords": [
     "react",
@@ -40,7 +40,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "smooth-corners-js": "^0.1.2"
+    "smooth-corners-js": "^0.2.0"
   },
   "devDependencies": {
     "typescript": "^5.9.2",

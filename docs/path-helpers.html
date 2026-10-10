@@ -96,6 +96,8 @@ element.style.clipPath = `path("${d}")`;</code></pre></div>
   <h3><code>createSmoothRectPath(width, height, radii, smoothing?, originX?, originY?)</code></h3>
   <p>The same, with a separate radius for each corner.</p>
   <div class="code"><pre><code class="language-js">const d = createSmoothRectPath(320, 200, { tl: 32, tr: 32, br: 0, bl: 0 }, 0.6);</code></pre></div>
+  <p><code>createSmoothCornerPath</code> also takes <code>pill: true</code>, which turns a large radius into a smooth pill.</p>
+  <div class="code"><pre><code class="language-js">const d = createSmoothCornerPath(320, 64, { radius: 999, smoothing: 0.8, pill: true });</code></pre></div>
 <div class="pager"><a class="prev" href="one-element.html"><svg class="i"><use href="#i-left"/></svg><span><small>Previous</small><b>One element</b></span></a><a class="next" href="react.html"><span><small>Next</small><b>React</b></span><svg class="i"><use href="#i-right"/></svg></a></div>
 <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a> · Icons by <a href="https://lucide.dev">Lucide</a> and <a href="https://simpleicons.org">Simple Icons</a></footer>
 </main>

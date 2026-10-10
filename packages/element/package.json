@@ -1,6 +1,6 @@
 {
   "name": "smooth-corners-element",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A <smooth-corners> web component with continuous-curvature corners. Works in any framework or none.",
   "keywords": [
     "web component",
@@ -47,7 +47,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "smooth-corners-js": "^0.1.2"
+    "smooth-corners-js": "^0.2.0"
   },
   "devDependencies": {
     "typescript": "^5.9.2"

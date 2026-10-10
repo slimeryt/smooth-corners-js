@@ -1,7 +1,7 @@
 import { onBeforeUnmount, onMounted, watch, type App, type Directive, type Ref } from 'vue';
 import { applySmoothCorners, enableAutoSmoothCorners } from 'smooth-corners-js';
 
-export type SmoothCornersOptions = { radius: number; smoothing?: number };
+export type SmoothCornersOptions = { radius: number; smoothing?: number; pill?: boolean };
 
 const stops = new WeakMap<HTMLElement, () => void>();
 
@@ -18,7 +18,7 @@ function apply(element: HTMLElement, value: SmoothCornersOptions | undefined) {
 export const vSmoothCorners: Directive<HTMLElement, SmoothCornersOptions> = {
   mounted: (element, binding) => apply(element, binding.value),
   updated: (element, binding) => {
-    if (binding.value?.radius !== binding.oldValue?.radius || binding.value?.smoothing !== binding.oldValue?.smoothing) apply(element, binding.value);
+    if (binding.value?.radius !== binding.oldValue?.radius || binding.value?.smoothing !== binding.oldValue?.smoothing || binding.value?.pill !== binding.oldValue?.pill) apply(element, binding.value);
   },
   unmounted: (element) => release(element),
 };
@@ -36,13 +36,13 @@ export function useSmoothCorners(target: Ref<HTMLElement | null | undefined>, op
   onBeforeUnmount(() => stop?.());
 }
 
-export type SmoothCornersPluginOptions = { auto?: boolean; smoothing?: number; minRadius?: number };
+export type SmoothCornersPluginOptions = { auto?: boolean; smoothing?: number; minRadius?: number; pills?: boolean };
 
 export const SmoothCornersPlugin = {
   install(app: App, options: SmoothCornersPluginOptions = {}) {
     app.directive('smooth-corners', vSmoothCorners);
     if (!options.auto || typeof document === 'undefined') return;
-    const start = () => enableAutoSmoothCorners({ smoothing: options.smoothing, minRadius: options.minRadius });
+    const start = () => enableAutoSmoothCorners({ smoothing: options.smoothing, minRadius: options.minRadius, pills: options.pills });
     if (document.body) start();
     else document.addEventListener('DOMContentLoaded', start, { once: true });
   },

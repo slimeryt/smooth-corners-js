@@ -97,6 +97,13 @@ const stop = applySmoothCorners(document.querySelector('.card'), {
   smoothing: 0.6,
 });</code></pre></div>
   <p>This clips the element to the shape and follows its size. It also clips shadows and anything that overflows, so use it for simple elements. Call the returned function to undo it.</p>
+  <h3>Pills</h3>
+  <p>Pass <code>pill: true</code> with a large radius to get a smooth pill. The shape keeps its round tip and eases into the straight edges.</p>
+  <div class="code"><pre><code class="language-js">applySmoothCorners(document.querySelector('.button'), {
+  radius: 999,
+  smoothing: 0.8,
+  pill: true,
+});</code></pre></div>
 <div class="pager"><a class="prev" href="smooth-everything.html"><svg class="i"><use href="#i-left"/></svg><span><small>Previous</small><b>Smooth everything</b></span></a><a class="next" href="path-helpers.html"><span><small>Next</small><b>Path helpers</b></span><svg class="i"><use href="#i-right"/></svg></a></div>
 <footer>MIT licensed. <a href="https://www.npmjs.com/package/smooth-corners-js">npm</a> · <a href="https://github.com/slimeryt/smooth-corners-js">GitHub</a> · Icons by <a href="https://lucide.dev">Lucide</a> and <a href="https://simpleicons.org">Simple Icons</a></footer>
 </main>

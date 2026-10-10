@@ -100,6 +100,8 @@ export function Card() {
   return &lt;div use:smoothCorners={{ radius: 24, smoothing: 0.6 }}&gt;Hello&lt;/div&gt;;
 }</code></pre></div>
   <p>The <code>false &amp;&amp; smoothCorners</code> line stops your bundler from removing the import, as Solid directives require. The options can read a signal, so the corners follow it.</p>
+  <h3>Pills</h3>
+  <p>Use <code>pill: true</code> with a large radius: <code>use:smoothCorners={{ radius: 999, smoothing: 0.8, pill: true }}</code>. For the whole-app helper, pass <code>pills: true</code>.</p>
   <h3>Whole app</h3>
   <div class="code"><pre><code class="language-js">import { useAutoSmoothCorners } from 'smooth-corners-solid';
 

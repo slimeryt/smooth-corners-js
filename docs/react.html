@@ -111,6 +111,8 @@ export function Panel() {
   useSmoothCorners(ref, { radius: 32 });
   return &lt;div ref={ref} className="panel" /&gt;;
 }</code></pre></div>
+  <h3>Pills</h3>
+  <p>Add <code>pill</code> with a large radius for a smooth pill: <code>&lt;SmoothCorners radius={999} pill smoothing={0.8}&gt;</code>. On <code>AutoSmoothCorners</code> the option is called <code>pills</code>.</p>
   <h3>Whole app</h3>
   <p>Render it once near the root to smooth every element that has a <code>border-radius</code>. It does nothing on the server.</p>
   <div class="code"><pre><code class="language-js">import { AutoSmoothCorners } from 'smooth-corners-react';

@@ -1,7 +1,7 @@
 import { applySmoothCorners } from 'smooth-corners-js';
 
 export class SmoothCornersElement extends HTMLElement {
-  static observedAttributes = ['radius', 'smoothing'];
+  static observedAttributes = ['radius', 'smoothing', 'pill'];
 
   private stop?: () => void;
 
@@ -23,7 +23,7 @@ export class SmoothCornersElement extends HTMLElement {
     this.stop?.();
     const radius = Number(this.getAttribute('radius') ?? 16);
     const smoothing = this.hasAttribute('smoothing') ? Number(this.getAttribute('smoothing')) : undefined;
-    this.stop = applySmoothCorners(this, { radius, smoothing });
+    this.stop = applySmoothCorners(this, { radius, smoothing, pill: this.hasAttribute('pill') });
   }
 }
 

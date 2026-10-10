@@ -1,14 +1,16 @@
-export type SmoothCornerOptions = { radius: number; smoothing?: number };
+export type SmoothCornerOptions = { radius: number; smoothing?: number; pill?: boolean };
 export type CornerRadii = { tl: number; tr: number; br: number; bl: number };
 const number = (value: number) => Number(value.toFixed(3));
 const radians = (degrees: number) => (degrees * Math.PI) / 180;
 
 type CornerParams = { a: number; b: number; c: number; d: number; p: number; arc: number; r: number };
 
-function cornerParams(radius: number, smoothing: number, budget: number): CornerParams {
-  const r = Math.min(radius, budget);
+function cornerParams(radius: number, smoothing: number, budget: number, fitRadius = false): CornerParams {
+  let r = Math.min(radius, budget);
   if (r <= 0) return { a: 0, b: 0, c: 0, d: 0, p: 0, arc: 0, r: 0 };
-  const s = Math.max(0, Math.min(smoothing, budget / r - 1));
+  let s = Math.max(0, Math.min(smoothing, 1));
+  if (fitRadius) r = Math.min(r, budget / (1 + s));
+  else s = Math.min(s, budget / r - 1);
   const p = Math.min((1 + s) * r, budget);
   const arcMeasure = 90 * (1 - s);
   const arc = Math.sin(radians(arcMeasure / 2)) * r * Math.SQRT2;
@@ -19,11 +21,62 @@ function cornerParams(radius: number, smoothing: number, budget: number): Corner
   return { a: 2 * b, b, c, d, p, arc, r };
 }
 
-export function createSmoothRectPath(width: number, height: number, radii: CornerRadii, smoothing = 0.6, originX = 0, originY = 0) {
+type PillCap = { a: number; b: number; c: number; d: number; len: number; alpha: number };
+
+function pillCap(radius: number, smoothing: number): PillCap {
+  if (smoothing <= 0) return { a: 0, b: 0, c: 0, d: 0, len: radius, alpha: 0 };
+  const alpha = (Math.PI / 4) * smoothing;
+  const arcChord = Math.sin(radians(45 * (1 - smoothing))) * radius * Math.SQRT2;
+  const c = radius * Math.tan(alpha / 2) * Math.cos(alpha);
+  const d = c * Math.tan(alpha);
+  const b = ((1 + smoothing) * radius - arcChord - c - d) / 3;
+  return { a: 2 * b, b, c, d, len: 3 * b + c + radius * (1 - Math.sin(alpha)), alpha };
+}
+
+function createSmoothPillPath(width: number, height: number, smoothing: number, originX: number, originY: number) {
+  const vertical = height > width;
+  const length = vertical ? height : width;
+  const thickness = vertical ? width : height;
+  const radius = thickness / 2;
+  let s = Math.max(0, Math.min(smoothing, 1));
+  let cap = pillCap(radius, s);
+  if (2 * cap.len > length) {
+    let low = 0, high = s;
+    for (let i = 0; i < 14; i++) {
+      const mid = (low + high) / 2;
+      if (2 * pillCap(radius, mid).len <= length) low = mid; else high = mid;
+    }
+    s = low;
+    cap = pillCap(radius, s);
+  }
+  const ramp = cap.a + cap.b + cap.c;
+  const sweep = vertical ? 0 : 1;
+  const at = (x: number, y: number) => (vertical ? `${number(originX + y)} ${number(originY + x)}` : `${number(originX + x)} ${number(originY + y)}`);
+  const right = length - cap.len;
+  const arc = (x: number, y: number) => `A${number(radius)} ${number(radius)} 0 0 ${sweep} ${at(x, y)}`;
+  const cubic = (x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) => `C${at(x1, y1)} ${at(x2, y2)} ${at(x3, y3)}`;
+  return [
+    `M${at(cap.len, 0)}`,
+    `L${at(right, 0)}`,
+    cubic(right + cap.a, 0, right + cap.a + cap.b, 0, right + ramp, cap.d),
+    arc(length, radius),
+    arc(right + ramp, thickness - cap.d),
+    cubic(right + cap.a + cap.b, thickness, right + cap.a, thickness, right, thickness),
+    `L${at(cap.len, thickness)}`,
+    cubic(cap.len - cap.a, thickness, cap.len - cap.a - cap.b, thickness, cap.len - ramp, thickness - cap.d),
+    arc(0, radius),
+    arc(cap.len - ramp, cap.d),
+    cubic(cap.len - cap.a - cap.b, 0, cap.len - cap.a, 0, cap.len, 0),
+    'Z',
+  ].join(' ');
+}
+
+export function createSmoothRectPath(width: number, height: number, radii: CornerRadii, smoothing = 0.6, originX = 0, originY = 0, fitRadius = false) {
   if (width <= 0 || height <= 0) return '';
   const s = Math.max(0, Math.min(smoothing, 1));
   const budget = Math.min(width, height) / 2;
-  const tl = cornerParams(radii.tl, s, budget), tr = cornerParams(radii.tr, s, budget), br = cornerParams(radii.br, s, budget), bl = cornerParams(radii.bl, s, budget);
+  if (fitRadius && Math.min(radii.tl, radii.tr, radii.br, radii.bl) >= budget - 0.5) return createSmoothPillPath(width, height, s, originX, originY);
+  const tl = cornerParams(radii.tl, s, budget, fitRadius), tr = cornerParams(radii.tr, s, budget, fitRadius), br = cornerParams(radii.br, s, budget, fitRadius), bl = cornerParams(radii.bl, s, budget, fitRadius);
   const n = number;
 
   const parts = [`M${n(originX + width - tr.p)} ${n(originY)}`];
@@ -40,7 +93,7 @@ export function createSmoothRectPath(width: number, height: number, radii: Corne
 
 export function createSmoothCornerPath(width: number, height: number, options: SmoothCornerOptions) {
   const radius = Math.max(0, options.radius);
-  return createSmoothRectPath(width, height, { tl: radius, tr: radius, br: radius, bl: radius }, options.smoothing ?? 0.6);
+  return createSmoothRectPath(width, height, { tl: radius, tr: radius, br: radius, bl: radius }, options.smoothing ?? 0.6, 0, 0, options.pill ?? false);
 }
 
 export function applySmoothCorners(element: HTMLElement, options: SmoothCornerOptions) {
@@ -56,7 +109,7 @@ export function applySmoothCorners(element: HTMLElement, options: SmoothCornerOp
   return () => { observer.disconnect(); element.style.clipPath = previous; };
 }
 
-export type AutoSmoothOptions = { smoothing?: number; minRadius?: number };
+export type AutoSmoothOptions = { smoothing?: number; minRadius?: number; pills?: boolean };
 const OVERRIDDEN = ['border-radius', 'border-color', 'background-color', 'background-image', 'background-size', 'background-origin', 'background-repeat', 'background-position', 'clip-path', 'box-shadow', 'filter'] as const;
 type Overridden = (typeof OVERRIDDEN)[number];
 const ANIMATABLE = ['background-color', 'border-color', 'color', 'box-shadow', 'opacity', 'transform', 'filter', 'outline-color', 'fill', 'stroke', 'width', 'height', 'margin', 'padding'];
@@ -92,6 +145,7 @@ const isRing = (layer: ShadowLayer) => layer.blur === 0 && layer.x === 0 && laye
 export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
   const smoothing = options.smoothing ?? 0.6;
   const minRadius = options.minRadius ?? 6;
+  const pills = options.pills ?? false;
   const saved = new WeakMap<HTMLElement, Record<string, [string, string]>>();
   const childClips = new WeakMap<HTMLElement, [HTMLElement, string, string][]>();
   const transitions = new WeakMap<HTMLElement, string>();
@@ -162,7 +216,8 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
     if (width < 12 || height < 12 || style.display === 'contents' || style.display === 'inline') return false;
     const fit = Math.min(1, width / (tl + tr || 1), width / (bl + br || 1), height / (tl + bl || 1), height / (tr + br || 1));
     const radii = { tl: tl * fit, tr: tr * fit, br: br * fit, bl: bl * fit };
-    if (Math.max(radii.tl, radii.tr, radii.br, radii.bl) >= Math.min(width, height) / 2 - 0.5) return false;
+    const pill = Math.max(radii.tl, radii.tr, radii.br, radii.bl) >= Math.min(width, height) / 2 - 0.5;
+    if (pill && (!pills || Math.abs(width - height) < 2)) return false;
     if (style.clipPath !== 'none' || style.filter !== 'none') return false;
 
     const widths = [style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth].map(parseFloat);
@@ -203,7 +258,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
       if (overhangs && nearX && nearY) return false;
     }
 
-    const smooth = createSmoothRectPath(width, height, radii, smoothing);
+    const smooth = createSmoothRectPath(width, height, radii, smoothing, 0, 0, pill);
 
     const paint = !glass && !hasImage && !media && !scrolls;
     const [top, right, bottom, left] = widths;
@@ -219,7 +274,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
       const inner = createSmoothRectPath(width - left - right, height - top - bottom, {
         tl: Math.max(0, radii.tl - Math.max(top, left)), tr: Math.max(0, radii.tr - Math.max(top, right)),
         br: Math.max(0, radii.br - Math.max(bottom, right)), bl: Math.max(0, radii.bl - Math.max(bottom, left)),
-      }, smoothing, left, top);
+      }, smoothing, left, top, pill);
       bands.push(`<path d="${smooth} ${inner}" fill="${borderColor}" fill-rule="evenodd" clip-path="url(#s)"/>`);
     }
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs><clipPath id="s"><path d="${smooth}"/></clipPath></defs>${bands.join('')}</svg>`;
@@ -248,7 +303,7 @@ export function enableAutoSmoothCorners(options: AutoSmoothOptions = {}) {
           const x = box.left - bounds.left, y = box.top - bounds.top;
           if (x > reach && y > reach && width - (x + box.width) > reach && height - (y + box.height) > reach) continue;
           clipped.push([child, child.style.getPropertyValue('clip-path'), child.style.getPropertyPriority('clip-path')]);
-          child.style.setProperty('clip-path', `path("${createSmoothRectPath(width, height, radii, smoothing, -x, -y)}")`, 'important');
+          child.style.setProperty('clip-path', `path("${createSmoothRectPath(width, height, radii, smoothing, -x, -y, pill)}")`, 'important');
         }
         if (clipped.length) childClips.set(element, clipped);
       }
